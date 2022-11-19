@@ -1,0 +1,130 @@
+from flask import Flask, render_template, request, flash, redirect
+import random
+import numpy as np
+import tensorflow as tf
+from PIL import Image
+from keras.models import load_model
+#from tensorflow.keras.preprocessing import image
+import os
+
+UPLOAD_FOLDER = 'static/file/'
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+
+@app.route("/", methods=['GET', 'POST'])
+def home():
+    return render_template('login.html')
+@app.route("/NewUser", methods=['GET', 'POST'])
+def register():
+    return render_template('NewUser.html')
+
+@app.route("/index", methods=['GET', 'POST'])
+def index():
+    return render_template('index.html')
+
+@app.route("/predict", methods = ['POST', 'GET'])
+def predictPage():
+    if request.method == 'POST':
+
+        classes = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B' ]
+        m = load_model('sign.h5')
+        file1 = request.files['img']
+        imgfile = os.path.join(app.config['UPLOAD_FOLDER'], file1.filename)
+        file1.save(imgfile)
+        img_ = tf.keras.utils.load_img(imgfile, target_size=(227, 227))
+        img_array = tf.keras.utils.img_to_array(img_)
+        img_processed = np.expand_dims(img_array, axis=0)
+        img_processed /= 255.
+        prediction = m.predict(img_processed)
+
+        index = np.argmax(prediction)
+        answer=""
+        gram= ""
+        if index == 0:
+            answer = classes[index]
+            print(answer)
+
+        elif index == 1:
+            answer = classes[index]
+            print(answer)
+
+        elif index == 2:
+            answer = classes[index]
+            print(answer)
+
+        elif index == 3:
+            answer = classes[index]
+            print(answer)
+
+        elif index == 4:
+            answer = classes[index]
+            print(answer)
+
+        elif index == 5:
+            answer = classes[index]
+            print(answer)
+        elif index == 6:
+            answer = classes[index]
+            print(answer)
+        elif index == 7:
+            answer = classes[index]
+            print(answer)
+        elif index == 8:
+            answer = classes[index]
+            print(answer)
+        elif index == 9:
+            answer = classes[index]
+            print(answer)
+        elif index == 10:
+            answer = classes[index]
+            print(answer)
+
+        answer=answer
+        gram= gram
+        return render_template('predict.html', pred=answer)
+if __name__ == '__main__':
+        app.run(debug=True)
+
+
+html
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign language </title>
+    <style>
+
+    </style>
+</head>
+<body style="background-color: #100205; color: white;">
+<form class="form-horizontal" action="/predict" method="POST" enctype="multipart/form-data">
+
+    <h1 align="center" style="color: red;">sign language detection</h1>
+
+   <div style="font-family: "> <p>This article is about primary sign languages of the deaf. For signed versions of spoken languages, see manually coded language.</p>
+
+<p>Sign languages (also known as signed languages) are languages that use the visual-manual modality to convey meaning, instead of just spoken words. Sign languages are expressed through manual articulation in combination with non-manual markers. Sign languages are full-fledged natural languages with their own grammar and lexicon. Sign languages are not universal and are usually not mutually intelligible,although there are also similarities among different sign languages.</p>
+
+<p>Linguists consider both spoken and signed communication to be types of natural language, meaning that both emerged through an abstract, protracted aging process and evolved over time without meticulous planning.Sign language should not be confused with body language, a type of nonverbal communication.
+
+<p>Wherever communities of deaf people exist, sign languages have developed as useful means of communication and form the core of local Deaf cultures. Although signing is used primarily by the deaf and hard of hearing, it is also used by hearing individuals, such as those unable to physically speak, those who have trouble with oral language due to a disability or condition (augmentative and alternative communication), and those with deaf family members including children of deaf adults.</p>
+
+<p>The number of sign languages worldwide is not precisely known. Each country generally has its own native sign language; some have more than one. The 2021 edition of Ethnologue lists 150 sign languages, while the SIGN-HUB Atlas of Sign Language Structures lists over 200 and notes that there are more which have not been documented or discovered yet. As of 2021, Indo Sign Language is the most used sign language in the world, and Ethnologue ranks it as the 151st most "spoken" language in the world.</p>
+
+<p>Some sign languages have obtained some form of legal recognition.</p>
+
+<p>Linguists distinguish natural sign languages from other systems that are precursors to them or obtained from them, such as constructed manual codes for spoken languages, home sign, "baby sign", and signs learned by non-human primates.</p></div>
+               <div>
+
+                 <table align="center">
+                     <tr><th>PREDICTION</th></tr>
+                     <tr>        </tr>
+                     <tr><td><input type="file" name="img" style="color: #33C7B7;" >
+                   <input type="submit"  value="Predict" style="color: #33C7B7;"></td></tr> </table></div>
+            </form>
+</body>
+</html>
